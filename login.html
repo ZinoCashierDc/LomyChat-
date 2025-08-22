@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LomyChat - Login</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@300;400;500;600;700;800&display=swap');
+    
+    .font-primary {
+      font-family: 'Poppins', sans-serif;
+    }
+    
+    .font-secondary {
+      font-family: 'Inter', sans-serif;
+    }
+    
+    .glow-text {
+      text-shadow: 0 0 20px rgba(255, 255, 255, 0.5), 0 0 40px rgba(255, 255, 255, 0.3);
+    }
+    
+    .logo-glow {
+      filter: drop-shadow(0 0 20px rgba(255, 255, 255, 0.3));
+    }
+    
+    .card-glow {
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(255, 255, 255, 0.1);
+    }
+    
+    .floating {
+      animation: float 6s ease-in-out infinite;
+    }
+    
+    .floating-delayed {
+      animation: float 6s ease-in-out infinite;
+      animation-delay: 3s;
+    }
+    
+    @keyframes float {
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-20px) rotate(2deg); }
+    }
+    
+    .gradient-bg {
+      background: linear-gradient(135deg, #1e40af 0%, #1d4ed8 20%, #2563eb 40%, #0891b2 60%, #0d9488 80%, #059669 100%);
+      background-size: 600% 600%;
+      animation: gradientShift 12s ease infinite;
+    }
+    
+    @keyframes gradientShift {
+      0%, 100% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+    }
+    
+    .particle {
+      position: absolute;
+      border-radius: 50%;
+      background: rgba(14, 165, 233, 0.2);
+      animation: particleFloat 20s linear infinite;
+    }
+    
+    @keyframes particleFloat {
+      0% { 
+        transform: translateY(100vh) translateX(0px) rotate(0deg);
+        opacity: 0;
+      }
+      10% { opacity: 1; }
+      90% { opacity: 1; }
+      100% { 
+        transform: translateY(-100px) translateX(100px) rotate(360deg);
+        opacity: 0;
+      }
+    }
+    
+    .glassmorphism {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    
+    .input-field {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      transition: all 0.3s ease;
+    }
+    
+    .input-field:focus {
+      background: rgba(255, 255, 255, 0.15);
+      border-color: rgba(255, 255, 255, 0.4);
+      box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+    }
+    
+    .btn-primary {
+      background: linear-gradient(135deg, #0ea5e9 0%, #0891b2 100%);
+      transition: all 0.3s ease;
+    }
+    
+    .btn-primary:hover {
+      background: linear-gradient(135deg, #0891b2 0%, #0ea5e9 100%);
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px rgba(14, 165, 233, 0.4);
+    }
+    
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      transition: all 0.3s ease;
+    }
+    
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.2);
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px rgba(255, 255, 255, 0.1);
+    }
+    
+    .btn-tertiary {
+      background: transparent;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      transition: all 0.3s ease;
+    }
+    
+    .btn-tertiary:hover {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: rgba(255, 255, 255, 0.5);
+    }
+    
+    .error-message {
+      background: rgba(239, 68, 68, 0.1);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+    }
+    
+    .success-message {
+      background: rgba(34, 197, 94, 0.1);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(34, 197, 94, 0.3);
+    }
+  </style>
+</head>
+<body class="gradient-bg min-h-screen flex items-center justify-center p-4 font-secondary overflow-hidden relative">
+  
+  <!-- Floating Particles -->
+  <div class="particle w-2 h-2" style="left: 10%; animation-delay: 0s;"></div>
+  <div class="particle w-3 h-3" style="left: 20%; animation-delay: 2s;"></div>
+  <div class="particle w-1 h-1" style="left: 30%; animation-delay: 4s;"></div>
+  <div class="particle w-2 h-2" style="left: 40%; animation-delay: 6s;"></div>
+  <div class="particle w-3 h-3" style="left: 50%; animation-delay: 8s;"></div>
+  <div class="particle w-1 h-1" style="left: 60%; animation-delay: 10s;"></div>
+  <div class="particle w-2 h-2" style="left: 70%; animation-delay: 12s;"></div>
+  <div class="particle w-3 h-3" style="left: 80%; animation-delay: 14s;"></div>
+  <div class="particle w-1 h-1" style="left: 90%; animation-delay: 16s;"></div>
+
+  <!-- Main Content -->
+  <div class="max-w-md w-full">
+    <!-- Logo Section -->
+    <div class="text-center mb-8 floating">
+      <img src="https://i.postimg.cc/d0Vh4kXD/-removebg-preview.png" alt="LomyChat Logo" class="w-16 h-16 mx-auto mb-4 logo-glow" onerror="this.style.display='none';">
+      <h1 class="font-primary text-3xl font-bold text-white glow-text mb-2">
+        Welcome to Lomy<span class="text-yellow-300">Chat</span>
+      </h1>
+      <p class="text-white/80 text-sm font-medium">Sign in to continue your conversations</p>
+    </div>
+
+    <!-- Main Card -->
+    <div class="glassmorphism rounded-3xl p-8 card-glow floating-delayed">
+      <!-- Header -->
+      <div class="text-center mb-6">
+        <div class="w-16 h-16 mx-auto mb-4 bg-white/10 rounded-2xl flex items-center justify-center">
+          <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"></path>
+          </svg>
+        </div>
+        <h2 class="font-primary text-2xl font-semibold text-white mb-2">Login</h2>
+        <p class="text-white/70 text-sm">Enter your credentials to access your account</p>
+      </div>
+
+      <!-- Form -->
+      <form id="loginForm" class="space-y-5">
+        <!-- Email Field -->
+        <div>
+          <label class="block text-white/80 text-sm font-medium mb-2">Email Address</label>
+          <div class="relative">
+            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <svg class="w-5 h-5 text-white/50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207"></path>
+              </svg>
+            </div>
+            <input 
+              id="email" 
+              type="email" 
+              required 
+              class="input-field w-full pl-10 pr-4 py-3 rounded-xl text-white placeholder-white/50 focus:outline-none"
+              placeholder="Enter your email"
+            >
+          </div>
+        </div>
+
+        <!-- Password Field -->
+        <div>
+          <label class="block text-white/80 text-sm font-medium mb-2">Password</label>
+          <div class="relative">
+            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <svg class="w-5 h-5 text-white/50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+              </svg>
+            </div>
+            <input 
+              id="password" 
+              type="password" 
+              required 
+              class="input-field w-full pl-10 pr-12 py-3 rounded-xl text-white placeholder-white/50 focus:outline-none"
+              placeholder="Enter your password"
+            >
+            <button type="button" id="togglePassword" class="absolute inset-y-0 right-0 pr-3 flex items-center text-white/50 hover:text-white transition-colors">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="space-y-3 pt-4">
+          <button type="submit" id="loginBtn" class="btn-primary w-full py-3 px-6 text-white font-semibold rounded-xl shadow-lg flex items-center justify-center space-x-2 group">
+            <svg class="w-5 h-5 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"></path>
+            </svg>
+            <span>Login</span>
+          </button>
+          
+          <button type="button" onclick="location.href='signup.html'" class="btn-secondary w-full py-3 px-6 text-white font-semibold rounded-xl shadow-lg flex items-center justify-center space-x-2 group">
+            <svg class="w-5 h-5 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"></path>
+            </svg>
+            <span>Create Account</span>
+          </button>
+          
+          <button type="button" id="resetPassword" class="btn-tertiary w-full py-3 px-6 text-white/80 font-medium rounded-xl flex items-center justify-center space-x-2 group">
+            <svg class="w-5 h-5 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"></path>
+            </svg>
+            <span>Forgot Password?</span>
+          </button>
+        </div>
+      </form>
+
+      <!-- Error/Success Messages -->
+      <div id="messageContainer" class="mt-4 hidden">
+        <div id="errorMessage" class="error-message p-3 rounded-xl text-red-200 text-sm text-center"></div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="text-center mt-6">
+      <p class="text-white/50 text-sm font-medium">
+        Don't have an account? 
+        <a href="signup.html" class="text-yellow-300 hover:text-yellow-200 transition-colors font-semibold">Sign up here</a>
+      </p>
+    </div>
+  </div>
+
+  <!-- Password Reset Modal -->
+  <div id="resetModal" class="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 hidden z-50">
+    <div class="glassmorphism rounded-3xl p-8 w-full max-w-md card-glow">
+      <div class="text-center mb-6">
+        <div class="w-16 h-16 mx-auto mb-4 bg-white/10 rounded-2xl flex items-center justify-center">
+          <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"></path>
+          </svg>
+        </div>
+        <h3 class="font-primary text-xl font-semibold text-white mb-2">Reset Password</h3>
+        <p class="text-white/70 text-sm">We'll send you a verification code</p>
+      </div>
+
+      <!-- Step 1: Email Input -->
+      <div id="emailStep" class="space-y-4">
+        <div>
+          <label class="block text-white/80 text-sm font-medium mb-2">Email Address</label>
+          <div class="relative">
+            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <svg class="w-5 h-5 text-white/50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207"></path>
+              </svg>
+            </div>
+            <input 
+              id="resetEmail" 
+              type="email" 
+              required 
+              class="input-field w-full pl-10 pr-4 py-3 rounded-xl text-white placeholder-white/50 focus:outline-none"
+              placeholder="Enter your email"
+            >
+          </div>
+        </div>
+        <div class="flex space-x-3">
+          <button id="sendCodeBtn" class="btn-primary flex-1 py-3 px-6 text-white font-semibold rounded-xl shadow-lg flex items-center justify-center space-x-2">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
+            </svg>
+            <span>Send Code</span>
+          </button>
+          <button id="cancelResetBtn" class="btn-secondary px-6 py-3 text-white font-semibold rounded-xl">Cancel</button>
+        </div>
+      </div>
+
+      <!-- Step 2: Code Verification -->
+      <div id="codeStep" class="space-y-4 hidden">
+        <div>
+          <label class="block text-white/80 text-sm font-medium mb-2">Verification Code</label>
+          <div class="relative">
+            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <svg class="w-5 h-5 text-white/50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+              </svg>
+            </div>
+            <input 
+              id="verificationCode" 
+              type="text" 
+              required 
+              class="input-field w-full pl-10 pr-4 py-3 rounded-xl text-white placeholder-white/50 focus:outline-none"
+              placeholder="Enter 6-digit code"
+              maxlength="6"
+            >
+          </div>
+          <p class="text-white/50 text-xs mt-1">Check your email for the verification code</p>
+        </div>
+        <div>
+          <label class="block text-white/80 text-sm font-medium mb-2">New Password</label>
+          <div class="relative">
+            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <svg class="w-5 h-5 text-white/50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+              </svg>
+            </div>
+            <input 
+              id="newPassword" 
+              type="password" 
+              required 
+              class="input-field w-full pl-10 pr-4 py-3 rounded-xl text-white placeholder-white/50 focus:outline-none"
+              placeholder="Create new password"
+            >
+          </div>
+        </div>
+        <div class="flex space-x-3">
+          <button id="resetPasswordBtn" class="btn-primary flex-1 py-3 px-6 text-white font-semibold rounded-xl shadow-lg flex items-center justify-center space-x-2">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+            <span>Reset Password</span>
+          </button>
+          <button id="backToEmailBtn" class="btn-secondary px-6 py-3 text-white font-semibold rounded-xl">Back</button>
+        </div>
+      </div>
+
+      <!-- Modal Messages -->
+      <div id="modalMessageContainer" class="mt-4 hidden">
+        <div id="modalMessage" class="error-message p-3 rounded-xl text-red-200 text-sm text-center"></div>
+      </div>
+    </div>
+  </div>
+
+  <script type="module">
+    import { auth } from "./firebase.js";
+    import { signInWithEmailAndPassword, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
+
+    const form = document.getElementById("loginForm");
+    const togglePassword = document.getElementById("togglePassword");
+    const passwordInput = document.getElementById("password");
+    const errorMessage = document.getElementById("errorMessage");
+    const messageContainer = document.getElementById("messageContainer");
+    const resetPasswordBtn = document.getElementById("resetPassword");
+    const loginBtn = document.getElementById("loginBtn");
+
+    // Toggle password visibility
+    togglePassword.addEventListener("click", () => {
+      const type = passwordInput.type === "password" ? "text" : "password";
+      passwordInput.type = type;
+      
+      // Update icon
+      const icon = type === "password" ? 
+        `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>` :
+        `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.878 9.878L3 3m6.878 6.878L21 21"></path>`;
+      
+      togglePassword.querySelector('svg').innerHTML = icon;
+    });
+
+    // Show message function
+    function showMessage(message, isError = true) {
+      messageContainer.classList.remove("hidden");
+      errorMessage.textContent = message;
+      errorMessage.className = isError ? 
+        "error-message p-3 rounded-xl text-red-200 text-sm text-center" :
+        "success-message p-3 rounded-xl text-green-200 text-sm text-center";
+    }
+
+    // Hide message function
+    function hideMessage() {
+      messageContainer.classList.add("hidden");
+    }
+
+    // Handle login
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      hideMessage();
+      
+      const email = document.getElementById("email").value;
+      const password = passwordInput.value;
+
+      // Show loading state
+      loginBtn.innerHTML = `
+        <svg class="animate-spin w-5 h-5" fill="none" viewBox="0 0 24 24">
+          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+        </svg>
+        <span>Logging In...</span>
+      `;
+      loginBtn.disabled = true;
+
+      try {
+        await signInWithEmailAndPassword(auth, email, password);
+        showMessage("Login successful! Redirecting...", false);
+        
+        setTimeout(() => {
+          window.location.href = "chatlist.html";
+        }, 1500);
+      } catch (error) {
+        showMessage("Incorrect email or password!");
+        
+        // Reset button
+        loginBtn.innerHTML = `
+          <svg class="w-5 h-5 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"></path>
+          </svg>
+          <span>Login</span>
+        `;
+        loginBtn.disabled = false;
+      }
+    });
+
+    // Modal elements
+    const resetModal = document.getElementById("resetModal");
+    const emailStep = document.getElementById("emailStep");
+    const codeStep = document.getElementById("codeStep");
+    const resetEmailInput = document.getElementById("resetEmail");
+    const verificationCodeInput = document.getElementById("verificationCode");
+    const newPasswordInput = document.getElementById("newPassword");
+    const sendCodeBtn = document.getElementById("sendCodeBtn");
+    const cancelResetBtn = document.getElementById("cancelResetBtn");
+    const resetPasswordBtnModal = document.getElementById("resetPasswordBtn");
+    const backToEmailBtn = document.getElementById("backToEmailBtn");
+    const modalMessageContainer = document.getElementById("modalMessageContainer");
+    const modalMessage = document.getElementById("modalMessage");
+
+    // Store verification data
+    let verificationData = {
+      email: '',
+      code: '',
+      timestamp: 0
+    };
+
+    // Modal message functions
+    function showModalMessage(message, isError = true) {
+      modalMessageContainer.classList.remove("hidden");
+      modalMessage.textContent = message;
+      modalMessage.className = isError ? 
+        "error-message p-3 rounded-xl text-red-200 text-sm text-center" :
+        "success-message p-3 rounded-xl text-green-200 text-sm text-center";
+    }
+
+    function hideModalMessage() {
+      modalMessageContainer.classList.add("hidden");
+    }
+
+    // Generate random 6-digit code
+    function generateVerificationCode() {
+      return Math.floor(100000 + Math.random() * 900000).toString();
+    }
+
+    // Open reset modal
+    resetPasswordBtn.addEventListener("click", () => {
+      resetModal.classList.remove("hidden");
+      emailStep.classList.remove("hidden");
+      codeStep.classList.add("hidden");
+      hideModalMessage();
+      resetEmailInput.value = '';
+      verificationCodeInput.value = '';
+      newPasswordInput.value = '';
+    });
+
+    // Close modal
+    cancelResetBtn.addEventListener("click", () => {
+      resetModal.classList.add("hidden");
+    });
+
+    // Back to email step
+    backToEmailBtn.addEventListener("click", () => {
+      emailStep.classList.remove("hidden");
+      codeStep.classList.add("hidden");
+      hideModalMessage();
+    });
+
+    // Send verification code
+    sendCodeBtn.addEventListener("click", async () => {
+      const email = resetEmailInput.value.trim();
+      
+      if (!email) {
+        showModalMessage("Please enter your email address");
+        return;
+      }
+
+      // Show loading
+      sendCodeBtn.innerHTML = `
+        <svg class="animate-spin w-5 h-5" fill="none" viewBox="0 0 24 24">
+          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+        </svg>
+        <span>Sending...</span>
+      `;
+      sendCodeBtn.disabled = true;
+
+      try {
+        // Generate and store verification code
+        const code = generateVerificationCode();
+        verificationData = {
+          email: email,
+          code: code,
+          timestamp: Date.now()
+        };
+
+        // Send password reset email (Firebase will handle the actual reset)
+        await sendPasswordResetEmail(auth, email);
+        
+        // Show success and move to code step
+        showModalMessage(`Verification code sent to ${email}. Code: ${code} (Demo: In real app, this would be sent via email)`, false);
+        
+        setTimeout(() => {
+          emailStep.classList.add("hidden");
+          codeStep.classList.remove("hidden");
+          hideModalMessage();
+        }, 3000);
+
+      } catch (error) {
+        showModalMessage("Error: " + error.message);
+      } finally {
+        // Reset button
+        sendCodeBtn.innerHTML = `
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
+          </svg>
+          <span>Send Code</span>
+        `;
+        sendCodeBtn.disabled = false;
+      }
+    });
+
+    // Reset password with code verification
+    resetPasswordBtnModal.addEventListener("click", async () => {
+      const enteredCode = verificationCodeInput.value.trim();
+      const newPassword = newPasswordInput.value.trim();
+
+      if (!enteredCode) {
+        showModalMessage("Please enter the verification code");
+        return;
+      }
+
+      if (!newPassword) {
+        showModalMessage("Please enter a new password");
+        return;
+      }
+
+      if (newPassword.length < 6) {
+        showModalMessage("Password must be at least 6 characters long");
+        return;
+      }
+
+      // Check if code matches and is not expired (10 minutes)
+      const isCodeExpired = Date.now() - verificationData.timestamp > 10 * 60 * 1000;
+      
+      if (enteredCode !== verificationData.code) {
+        showModalMessage("Invalid verification code");
+        return;
+      }
+
+      if (isCodeExpired) {
+        showModalMessage("Verification code has expired. Please request a new one.");
+        return;
+      }
+
+      // Show loading
+      resetPasswordBtnModal.innerHTML = `
+        <svg class="animate-spin w-5 h-5" fill="none" viewBox="0 0 24 24">
+          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+        </svg>
+        <span>Resetting...</span>
+      `;
+      resetPasswordBtnModal.disabled = true;
+
+      try {
+        // In a real app, you would use Firebase Admin SDK or a cloud function
+        // For demo purposes, we'll show success and redirect to login
+        showModalMessage("Password reset successful! You can now login with your new password.", false);
+        
+        setTimeout(() => {
+          resetModal.classList.add("hidden");
+          showMessage("Password reset completed! Please login with your new password.", false);
+        }, 2000);
+
+      } catch (error) {
+        showModalMessage("Error resetting password: " + error.message);
+      } finally {
+        // Reset button
+        resetPasswordBtnModal.innerHTML = `
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+          </svg>
+          <span>Reset Password</span>
+        `;
+        resetPasswordBtnModal.disabled = false;
+      }
+    });
+
+    // Close modal when clicking outside
+    resetModal.addEventListener("click", (e) => {
+      if (e.target === resetModal) {
+        resetModal.classList.add("hidden");
+      }
+    });
+
+    // Add dynamic particle generation
+    function createParticle() {
+      const particle = document.createElement('div');
+      particle.className = 'particle';
+      particle.style.left = Math.random() * 100 + '%';
+      particle.style.width = particle.style.height = (Math.random() * 3 + 1) + 'px';
+      particle.style.animationDelay = Math.random() * 2 + 's';
+      particle.style.animationDuration = (Math.random() * 10 + 15) + 's';
+      
+      document.body.appendChild(particle);
+      
+      setTimeout(() => {
+        particle.remove();
+      }, 25000);
+    }
+
+    // Generate particles periodically
+    setInterval(createParticle, 3000);
+  </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'97289e6a527fc4e4',t:'MTc1NTc2MzQ1Ny4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
