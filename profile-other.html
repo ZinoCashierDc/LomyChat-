@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>LomyChat — Profile</title>
+
+<!-- Tailwind for fast, consistent styling -->
+<script src="https://cdn.tailwindcss.com"></script>
+<!-- Firebase Libraries -->
+<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js" type="module"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js" type="module"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js" type="module"></script>
+
+<style>
+  :root{
+    --card:#ffffff;
+    --text:#0b1220;
+    --muted:#667085;
+    --divider:#e6eaf0;
+    --brand:#0ea5e9;   /* cyan-blue */
+    --brand2:#22c55e;  /* green */
+    --bg-overlay: rgba(15,23,42,.55);
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --card:#0b121a;
+      --text:#e7f0f7;
+      --muted:#9db4c7;
+      --divider:#1b2633;
+      --bg-overlay: rgba(0,0,0,.45);
+    }
+  }
+  html,body{height:100%}
+  body{
+    margin:0; color:var(--text);
+    font:15px system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,Arial;
+    overflow:hidden;
+  }
+  .bg{
+    position:fixed; inset:0; z-index:-1; background-size:cover; background-position:center;
+  }
+  @media (prefers-color-scheme: light){
+    .bg{ background-image:url('https://i.postimg.cc/Y0Wb7Vfc/IMG-20250816-WA0070.jpg'); }
+  }
+  @media (prefers-color-scheme: dark){
+    .bg{ background-image:url('https://i.postimg.cc/QCT9nq8d/IMG-20250816-WA0069.jpg'); }
+  }
+  .glass{
+    background: var(--bg-overlay);
+    backdrop-filter: blur(12px);
+  }
+  .ring-outer{
+    background: conic-gradient(#60a5fa,#22c55e,#f59e0b,#60a5fa);
+    padding:3px; border-radius:9999px;
+  }
+  .qrBox{
+    border:1px solid var(--divider);
+    border-radius:14px;
+    background:var(--card);
+  }
+</style>
+</head>
+<body>
+<div class="bg" aria-hidden="true"></div>
+
+<!-- Header -->
+<header class="glass sticky top-0 z-10">
+  <div class="max-w-5xl mx-auto px-4 py-3 flex items-center gap-3">
+    <button onclick="history.back()" class="w-10 h-10 rounded-xl bg-white/20 hover:bg-white/30 text-white grid place-items-center" title="Back">
+      <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/>
+      </svg>
+    </button>
+    <div class="flex items-center gap-2">
+      <img class="w-8 h-8" src="https://i.postimg.cc/d0Vh4kXD/-removebg-preview.png" alt="LomyChat Logo"/>
+      <div class="text-white font-extrabold text-lg tracking-wide">LomyChat</div>
+    </div>
+    <div class="ml-auto">
+      <a href="chatlist.html" class="px-3 py-2 rounded-lg bg-white/20 hover:bg-white/30 text-white font-semibold">Chats</a>
+    </div>
+  </div>
+</header>
+
+<!-- Content scroll area -->
+<main class="max-w-5xl mx-auto px-4 py-6 overflow-auto h-[calc(100vh-64px)]">
+  <section class="grid md:grid-cols-[280px_1fr] gap-6 items-start">
+    <!-- Left card: avatar + primary actions -->
+    <div class="rounded-2xl p-5 glass border border-white/15">
+      <div class="grid justify-items-center gap-4">
+        <div class="ring-outer">
+          <img id="avatarImg" src="" alt="Avatar" class="w-36 h-36 rounded-full object-cover bg-white/10">
+        </div>
+        <div class="text-center">
+          <h1 id="displayName" class="text-2xl font-extrabold text-white">Loading...</h1>
+          <p id="username" class="text-sm text-white/80">@username</p>
+        </div>
+        <div class="w-full grid grid-cols-2 gap-3">
+          <button id="messageBtn" class="px-3 py-2 rounded-xl bg-sky-500 hover:bg-sky-600 text-white font-semibold disabled:opacity-50" disabled>Message</button>
+          <button id="callBtn" class="px-3 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-white font-semibold disabled:opacity-50" disabled>Call</button>
+        </div>
+        <div class="w-full grid grid-cols-3 gap-3">
+          <button id="addContactBtn" class="px-3 py-2 rounded-xl bg-white/20 hover:bg-white/30 text-white font-semibold disabled:opacity-50" disabled>Add</button>
+          <button id="muteBtn" class="px-3 py-2 rounded-xl bg-white/20 hover:bg-white/30 text-white font-semibold disabled:opacity-50" disabled>Mute</button>
+          <button id="shareBtn" class="px-3 py-2 rounded-xl bg-white/20 hover:bg-white/30 text-white font-semibold disabled:opacity-50" disabled>Share</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right card: details + QR + management -->
+    <div class="rounded-2xl p-5 bg-[var(--card)] border border-[var(--divider)]">
+      <div class="flex items-start gap-4">
+        <div class="flex-1">
+          <div class="flex items-center gap-3 flex-wrap">
+            <h2 id="fullName" class="text-2xl font-extrabold text-[var(--text)]">Loading...</h2>
+            <span id="onlineBadge" class="hidden px-2 py-1 rounded-md text-xs font-semibold bg-green-100 text-green-700">Online</span>
+          </div>
+          <p id="bio" class="mt-2 text-[var(--muted)]">...</p>
+          <ul class="mt-4 grid gap-2 text-sm text-[var(--text)]/90">
+            <li class="flex items-center gap-2"><svg class="w-5 h-5 text-sky-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 12-9 12S3 17 3 10a9 9 0 1 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg><span id="location">...</span></li>
+            <li class="flex items-center gap-2"><svg class="w-5 h-5 text-emerald-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 7h-7"/><path d="M14 17H4"/><path d="M14 7v10a4 4 0 0 0 4 4h2V3h-2a4 4 0 0 0-4 4Z"/></svg><span id="joined">...</span></li>
+          </ul>
+        </div>
+        <div class="qrBox p-3">
+          <img id="qrImg" alt="QR Code" class="w-40 h-40 rounded-md bg-gray-200" src="">
+          <div class="text-xs text-[var(--muted)] mt-2 text-center">Scan to share profile</div>
+        </div>
+      </div>
+      <div class="mt-6 grid sm:grid-cols-2 gap-3">
+        <button id="blockBtn" class="px-4 py-2 rounded-xl border border-red-300 text-red-700 bg-red-50 hover:bg-red-100 font-semibold disabled:opacity-50" disabled>Block user</button>
+        <button id="deleteBtn" class="px-4 py-2 rounded-xl border border-red-300 text-red-700 bg-red-50 hover:bg-red-100 font-semibold disabled:opacity-50" disabled>Delete chat</button>
+      </div>
+    </div>
+  </section>
+</main>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
+  import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
+
+  // --- Your Firebase Configuration ---
+  const firebaseConfig = {
+    apiKey: "AIzaSyAW6rJOip8zSZ4dUrU5NroTOVDju4gdTh0",
+    authDomain: "lomychat.firebaseapp.com",
+    projectId: "lomychat",
+    storageBucket: "lomychat.appspot.com",
+    messagingSenderId: "556633248856",
+    appId: "1:556633248856:web:fd93d8fe7a825c2cd0a62d"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  // --- Elements ---
+  const allButtons = document.querySelectorAll('button');
+  const avatarImg = document.getElementById('avatarImg');
+  const displayNameEl = document.getElementById('displayName');
+  const usernameEl = document.getElementById('username');
+  const fullNameEl = document.getElementById('fullName');
+  const onlineBadge = document.getElementById('onlineBadge');
+  const bioEl = document.getElementById('bio');
+  const locationEl = document.getElementById('location');
+  const joinedEl = document.getElementById('joined');
+  const qrImg = document.getElementById('qrImg');
+  const messageBtn = document.getElementById('messageBtn');
+  const shareBtn = document.getElementById('shareBtn');
+
+  // --- Fetch User Data from Firestore ---
+  async function fetchUser(uid) {
+    if (!uid) return null;
+    const userRef = doc(db, 'users', uid);
+    const userSnap = await getDoc(userRef);
+    return userSnap.exists() ? userSnap.data() : null;
+  }
+  
+  // --- UI Update Functions ---
+  function displayUserData(data, uid) {
+    const displayName = data.displayName || 'Unknown User';
+    const username = data.username || 'N/A';
+    
+    // Fill text fields
+    displayNameEl.textContent = displayName;
+    usernameEl.textContent = `@${username}`;
+    fullNameEl.textContent = displayName;
+    bioEl.textContent = data.bio || 'No bio provided.';
+    locationEl.textContent = data.location || 'Location not shared.';
+    joinedEl.textContent = `Joined: ${data.joined || 'Unknown'}`;
+    
+    // Display online status
+    if (data.status === 'online') {
+        onlineBadge.classList.remove('hidden');
+    }
+
+    // Set Avatar Image or fallback to SVG initial
+    if (data.avatarUrl) {
+        avatarImg.src = data.avatarUrl;
+    } else {
+        const initial = (displayName[0] || 'L').toUpperCase();
+        const svgAvatar = `data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><rect width='100%' height='100%' rx='80' fill='%230ea5e9'/><text x='50%' y='54%' dominant-baseline='middle' text-anchor='middle' font-size='72' font-family='Arial' fill='white'>${initial}</text></svg>`;
+        avatarImg.src = svgAvatar;
+    }
+
+    // Generate Profile Link and QR Code
+    const profileLink = `${location.origin}/profile-other.html?uid=${uid}`;
+    qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=${encodeURIComponent(profileLink)}`;
+
+    // Enable all buttons
+    allButtons.forEach(btn => btn.disabled = false);
+
+    // --- Add Event Listeners ---
+    messageBtn.onclick = () => {
+      window.location.href = `chat.html?userId=${uid}`;
+    };
+
+    shareBtn.onclick = async () => {
+      try {
+        if (navigator.share) {
+          await navigator.share({ title: 'LomyChat Profile', text: `Check out ${displayName} on LomyChat!`, url: profileLink });
+        } else {
+          await navigator.clipboard.writeText(profileLink);
+          alert('Profile link copied to clipboard!');
+        }
+      } catch (err) {
+        console.error('Share failed:', err);
+        alert('Could not share profile.');
+      }
+    };
+  }
+
+  function displayUserNotFound() {
+      displayNameEl.textContent = "User Not Found";
+      usernameEl.textContent = "@unknown";
+      fullNameEl.textContent = "User Not Found";
+      bioEl.textContent = "This user does not exist or the link is incorrect.";
+      avatarImg.src = `data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><rect width='100%' height='100%' rx='80' fill='%2364748b'/><text x='50%' y='54%' dominant-baseline='middle' text-anchor='middle' font-size='72' font-family='Arial' fill='white'>?</text></svg>`;
+  }
+
+  // --- Main Initialization ---
+  (async function init() {
+    const params = new URLSearchParams(location.search);
+    const profileUID = params.get('uid');
+
+    if (!profileUID) {
+        displayUserNotFound();
+        return;
+    }
+
+    const userData = await fetchUser(profileUID);
+
+    if (userData) {
+        displayUserData(userData, profileUID);
+    } else {
+        displayUserNotFound();
+    }
+  })();
+</script>
+</body>
+</html>
